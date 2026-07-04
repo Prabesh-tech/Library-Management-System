@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Library Management System
 
 A complete Java-based Library Management System with GUI, featuring user authentication, book catalogue management, and loan tracking.
@@ -251,3 +252,7 @@ For issues or enhancements, refer to:
 - Exception messages for error details
 - System console output for debug info
 - `src/util/SystemInitializer.java` for modifying demo data
+=======
+# Library-Management-System
+A simple, library management system with java and MySQL
+>>>>>>> 9606a2622c594c49a19d3d0bbc11ffbe655cfb8c
