@@ -24,10 +24,18 @@ public class UserService {
 
     public UserService() {
         this.userRepository = DataManager.getInstance().getUserRepository();
+        ensureJdbcAvailability();
+    }
+
+    private synchronized void ensureJdbcAvailability() {
         Connection conn = DataBaseConnection.getConnection();
-        this.useJdbc = conn != null;
-        if (useJdbc) {
-            this.jdbcUserDao = new JdbcUserDao();
+        if (conn != null) {
+            this.useJdbc = true;
+            if (this.jdbcUserDao == null) {
+                this.jdbcUserDao = new JdbcUserDao();
+            }
+        } else {
+            this.useJdbc = false;
         }
     }
 
@@ -38,6 +46,7 @@ public class UserService {
      * @return true if successfully added.
      */
     public boolean addUser(User user) {
+        ensureJdbcAvailability();
         if (useJdbc) return jdbcUserDao.addUser(user);
         return userRepository.save(user);
     }
@@ -49,6 +58,7 @@ public class UserService {
      * @return The User object or null if not found.
      */
     public User getUser(String userId) {
+        ensureJdbcAvailability();
         if (useJdbc) return jdbcUserDao.getUserById(userId);
         return userRepository.findById(userId);
     }
@@ -60,6 +70,7 @@ public class UserService {
      * @return The User object or null if not found.
      */
     public User getUserByEmail(String email) {
+        ensureJdbcAvailability();
         if (useJdbc) return jdbcUserDao.getUserByEmail(email);
         return userRepository.findByEmail(email);
     }
@@ -71,11 +82,13 @@ public class UserService {
      * @return The User object or null if not found.
      */
     public User getUserByLibraryId(String libraryId) {
+        ensureJdbcAvailability();
         if (useJdbc) return jdbcUserDao.getUserByLibraryId(libraryId);
         return userRepository.findByLibraryId(libraryId);
     }
 
     public User getUserById(String userId) {
+        ensureJdbcAvailability();
         if (useJdbc) return jdbcUserDao.getUserById(userId);
         return userRepository.findById(userId);
     }
@@ -87,6 +100,7 @@ public class UserService {
      * @return true if successfully updated.
      */
     public boolean updateUser(User user) {
+        ensureJdbcAvailability();
         if (useJdbc) return jdbcUserDao.updateUser(user);
         return userRepository.update(user);
     }
@@ -98,6 +112,7 @@ public class UserService {
      * @return true if successfully deleted.
      */
     public boolean deleteUser(String userId) {
+        ensureJdbcAvailability();
         if (useJdbc) return jdbcUserDao.deleteUser(userId);
         return userRepository.delete(userId);
     }
@@ -109,6 +124,7 @@ public class UserService {
      * @return List of users with that role.
      */
     public List<User> getUsersByRole(String role) {
+        ensureJdbcAvailability();
         if (useJdbc) return jdbcUserDao.findByRole(role);
         return userRepository.findByRole(role);
     }
@@ -119,6 +135,7 @@ public class UserService {
      * @return List of all users.
      */
     public List<User> getAllUsers() {
+        ensureJdbcAvailability();
         if (useJdbc) return jdbcUserDao.findAll();
         return userRepository.findAll();
     }
